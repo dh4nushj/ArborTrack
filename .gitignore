@@ -1,3 +1,21 @@
 .vercel
 node_modules/
+venv/
+.venv/
+dist/
+*.tsbuildinfo
+
+# Local credentials
 .env
+.env.*
+!.env.example
+.envrc
+*.local
+*.pem
+*.key
+.secrets/
+secrets/
+
+# Local SQLite database and journal files
+/server/arbortrack.db
+/server/arbortrack.db-*

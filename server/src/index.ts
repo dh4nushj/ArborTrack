@@ -1,7 +1,10 @@
 import 'dotenv/config';
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import multipart from '@fastify/multipart';
+import fastifyStatic from '@fastify/static';
 import { treesRoutes } from './routes/trees.js';
 import { statsRoutes } from './routes/stats.js';
 import { inspectRoutes } from './routes/inspect.js';
@@ -19,6 +22,11 @@ async function start() {
 
   // Health check
   app.get('/api/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }));
+
+  const clientRoot = new URL('../../client/dist/', import.meta.url);
+  if (process.env.NODE_ENV === 'production' || existsSync(clientRoot)) {
+    await app.register(fastifyStatic, { root: fileURLToPath(clientRoot) });
+  }
 
   // Seed the database on first startup
   await seedDatabase();
